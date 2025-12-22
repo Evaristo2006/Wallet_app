@@ -9,105 +9,160 @@ import {
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useTheme } from '../context/ThemeContext';
 
 const { width } = Dimensions.get('window');
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { theme } = useTheme();
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView
+      style={[styles.container, { backgroundColor: theme.background }]}
+      showsVerticalScrollIndicator={false}
+    >
       {/* HEADER */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.greeting}>Olá, Firmino</Text>
-          <Text style={styles.month}>Agosto 2025</Text>
+          <Text style={[styles.greeting, { color: theme.text }]}>
+            Olá, Firmino
+          </Text>
+          <Text style={[styles.month, { color: theme.subText }]}>
+            Agosto 2025
+          </Text>
         </View>
 
-        <Ionicons name="notifications-outline" size={24} color="#FFFFFF" />
+        <Ionicons
+          name="notifications-outline"
+          size={24}
+          color={theme.text}
+        />
       </View>
 
       {/* SALDO */}
-      <View style={styles.card}>
-        <Text style={styles.label}>Saldo atual</Text>
-        <Text style={styles.balance}>AOA 1.250.000</Text>
+      <View style={[styles.card, { backgroundColor: theme.card }]}>
+        <Text style={[styles.label, { color: theme.subText }]}>
+          Saldo atual
+        </Text>
+
+        <Text style={[styles.balance, { color: theme.text }]}>
+          AOA 1.250.000
+        </Text>
 
         <View style={styles.row}>
           <View>
-            <Text style={styles.income}>Entradas</Text>
-            <Text style={styles.incomeValue}>+ 800.000</Text>
+            <Text style={{ color: theme.income }}>Entradas</Text>
+            <Text style={[styles.incomeValue, { color: theme.income }]}>
+              + 800.000
+            </Text>
           </View>
 
           <View>
-            <Text style={styles.expense}>Saídas</Text>
-            <Text style={styles.expenseValue}>- 550.000</Text>
+            <Text style={{ color: theme.expense }}>Saídas</Text>
+            <Text style={[styles.expenseValue, { color: theme.expense }]}>
+              - 550.000
+            </Text>
           </View>
         </View>
       </View>
 
       {/* META */}
-      <Text style={styles.sectionTitle}>Meta em progresso</Text>
+      <Text style={[styles.sectionTitle, { color: theme.text }]}>
+        Meta em progresso
+      </Text>
 
-      <View style={styles.card}>
-        <Text style={styles.cardTitle}>Comprar Laptop</Text>
-        <Text style={styles.subText}>AOA 350.000 / 500.000</Text>
+      <View style={[styles.card, { backgroundColor: theme.card }]}>
+        <Text style={[styles.cardTitle, { color: theme.text }]}>
+          Comprar Laptop
+        </Text>
+
+        <Text style={[styles.subText, { color: theme.subText }]}>
+          AOA 350.000 / 500.000
+        </Text>
 
         <View style={styles.progressBar}>
-          <View style={styles.progressFill} />
+          <View
+            style={[
+              styles.progressFill,
+              { backgroundColor: theme.primary },
+            ]}
+          />
         </View>
       </View>
 
       {/* AÇÕES RÁPIDAS */}
-      <Text style={styles.sectionTitle}>Ações rápidas</Text>
+      <Text style={[styles.sectionTitle, { color: theme.text }]}>
+        Ações rápidas
+      </Text>
 
       <View style={styles.actions}>
         <TouchableOpacity
-          style={styles.actionBtn}
+          style={[styles.actionBtn, { backgroundColor: theme.card }]}
           onPress={() => router.push('../gastos')}
         >
           <MaterialCommunityIcons
             name="cash-minus"
             size={26}
-            color="#E63946"
+            color={theme.expense}
           />
-          <Text style={styles.actionText}>Novo gasto</Text>
+          <Text style={[styles.actionText, { color: theme.text }]}>
+            Novo gasto
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.actionBtn}
+          style={[styles.actionBtn, { backgroundColor: theme.card }]}
           onPress={() => router.push('../metas')}
         >
           <Ionicons
             name="trophy-outline"
             size={26}
-            color="#F4C430"
+            color={theme.primary}
           />
-          <Text style={styles.actionText}>Nova meta</Text>
+          <Text style={[styles.actionText, { color: theme.text }]}>
+            Nova meta
+          </Text>
         </TouchableOpacity>
       </View>
 
       {/* ÚLTIMAS TRANSAÇÕES */}
-      <Text style={styles.sectionTitle}>Últimas movimentações</Text>
+      <Text style={[styles.sectionTitle, { color: theme.text }]}>
+        Últimas movimentações
+      </Text>
 
-      <View style={styles.card}>
-        <Transaction title="Supermercado" value="- 12.500" expense />
-        <Transaction title="Salário" value="+ 250.000" />
-        <Transaction title="Transporte" value="- 3.000" expense />
+      <View style={[styles.card, { backgroundColor: theme.card }]}>
+        <Transaction
+          title="Supermercado"
+          value="- 12.500"
+          expense
+          theme={theme}
+        />
+        <Transaction
+          title="Salário"
+          value="+ 250.000"
+          theme={theme} expense={undefined}        />
+        <Transaction
+          title="Transporte"
+          value="- 3.000"
+          expense
+          theme={theme}
+        />
       </View>
     </ScrollView>
   );
 }
 
 /* COMPONENTE AUXILIAR */
-function Transaction({ title, value, expense }) {
+function Transaction({ title, value, expense, theme }) {
   return (
     <View style={styles.transaction}>
-      <Text style={styles.transactionTitle}>{title}</Text>
+      <Text style={{ color: theme.text }}>{title}</Text>
       <Text
-        style={[
-          styles.transactionValue,
-          { color: expense ? '#E63946' : '#2ECC71' },
-        ]}
+        style={{
+          fontWeight: 'bold',
+          color: expense ? theme.expense : theme.income,
+        }}
       >
         {value}
       </Text>
@@ -115,10 +170,11 @@ function Transaction({ title, value, expense }) {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0B132B',
+    backgroundColor: '#F5F7FA', // fundo mais claro e suave
     padding: 20,
   },
 
@@ -130,79 +186,92 @@ const styles = StyleSheet.create({
   },
 
   greeting: {
-    color: '#FFFFFF',
-    fontSize: 22,
-    fontWeight: 'bold',
+    color: '#1F2937', // título mais escuro e legível
+    fontSize: 24,
+    fontWeight: '700',
   },
 
   month: {
-    color: '#BFC9D9',
+    color: '#6B7280', // subtexto suave
     fontSize: 14,
+    marginTop: 2,
   },
 
   card: {
-    backgroundColor: '#1C2541',
-    borderRadius: 16,
-    padding: 16,
+    backgroundColor: '#FFFFFF', // cards brancos
+    borderRadius: 20,
+    padding: 20,
     marginBottom: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4, // para Android
   },
 
   label: {
-    color: '#BFC9D9',
+    color: '#6B7280',
     fontSize: 14,
+    marginBottom: 4,
   },
 
   balance: {
-    color: '#FFFFFF',
-    fontSize: 30,
-    fontWeight: 'bold',
+    color: '#111827',
+    fontSize: 32,
+    fontWeight: '700',
     marginVertical: 8,
   },
 
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginTop: 16,
   },
 
   income: {
-    color: '#2ECC71',
+    color: '#10B981', // verde moderno
+    fontWeight: '600',
   },
 
   incomeValue: {
-    color: '#2ECC71',
-    fontWeight: 'bold',
+    color: '#10B981',
+    fontWeight: '700',
+    fontSize: 16,
   },
 
   expense: {
-    color: '#E63946',
+    color: '#EF4444', // vermelho moderno
+    fontWeight: '600',
   },
 
   expenseValue: {
-    color: '#E63946',
-    fontWeight: 'bold',
+    color: '#EF4444',
+    fontWeight: '700',
+    fontSize: 16,
   },
 
   sectionTitle: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: '#111827',
+    fontSize: 20,
+    fontWeight: '700',
     marginBottom: 12,
   },
 
   cardTitle: {
-    color: '#FFFFFF',
+    color: '#111827',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
 
   subText: {
-    color: '#BFC9D9',
+    color: '#6B7280',
     marginVertical: 4,
+    fontSize: 14,
   },
 
   progressBar: {
     height: 8,
-    backgroundColor: '#3A506B',
+    backgroundColor: '#E5E7EB',
     borderRadius: 10,
     marginTop: 8,
     overflow: 'hidden',
@@ -211,7 +280,7 @@ const styles = StyleSheet.create({
   progressFill: {
     width: '70%',
     height: '100%',
-    backgroundColor: '#F4C430',
+    backgroundColor: '#3B82F6',
   },
 
   actions: {
@@ -222,30 +291,29 @@ const styles = StyleSheet.create({
 
   actionBtn: {
     width: width / 2 - 30,
-    backgroundColor: '#1C2541',
+    backgroundColor: '#FFFFFF',
     padding: 16,
-    borderRadius: 16,
+    borderRadius: 20,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
   },
 
   actionText: {
-    color: '#FFFFFF',
+    color: '#111827',
     marginTop: 8,
     fontSize: 14,
+    fontWeight: '600',
   },
 
   transaction: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingVertical: 8,
-  },
-
-  transactionTitle: {
-    color: '#FFFFFF',
-    fontSize: 14,
-  },
-
-  transactionValue: {
-    fontWeight: 'bold',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
   },
 });
