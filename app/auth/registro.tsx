@@ -1,169 +1,148 @@
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'expo-router';
-import React, { useState } from 'react';
-import {
-    Dimensions,
-    KeyboardAvoidingView,
-    Platform,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
-} from 'react-native';
 
-const { width } = Dimensions.get('window');
-
-const LoginScreen = () => {
+export default function RegistroScreen() {
+  const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
   const [senha, setSenha] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <LinearGradient
-      colors={['#4C6EF5', '#3B5BDB']}
-      style={styles.container}
-    >
+    <LinearGradient colors={['#4C6EF5', '#3B5BDB']} style={styles.container}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.innerContainer}
+        style={styles.center}
       >
-        <Text style={styles.title}>Login</Text>
+        <View style={styles.card}>
+          <Text style={styles.title}>Criar Conta</Text>
+          <Text style={styles.subtitle}>Comece agora gratuitamente</Text>
 
-        {/* Campo Nome */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Nome de usuário</Text>
-          <TextInput
-            placeholder="Digite seu nome"
-            placeholderTextColor="#EDEDED"
-            value={email}
-            onChangeText={setEmail}
-            style={styles.input}
-          />
-        </View>
-
-        
-        {/* Campo Nome */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Seu email</Text>
-          <TextInput
-            placeholder="seu email"
-            placeholderTextColor="#EDEDED"
-            value={name}
-            onChangeText={setName}
-            style={styles.input}
-          />
-        </View>
-
-        {/* Campo Senha */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Senha</Text>
-          <View style={styles.inputWithIcon}>
+          <View style={styles.inputWrapper}>
+            <MaterialIcons name="person" size={22} color="#FFD166" />
             <TextInput
-              placeholder="Digite sua senha"
-              placeholderTextColor="#EDEDED"
+              placeholder="Nome"
+              placeholderTextColor="#D1D5DB"
+              value={nome}
+              onChangeText={setNome}
+              style={styles.input}
+            />
+          </View>
+
+          <View style={styles.inputWrapper}>
+            <MaterialIcons name="email" size={22} color="#FFD166" />
+            <TextInput
+              placeholder="Email"
+              placeholderTextColor="#D1D5DB"
+              value={email}
+              onChangeText={setEmail}
+              style={styles.input}
+            />
+          </View>
+
+          <View style={styles.inputWrapper}>
+            <MaterialIcons name="lock" size={22} color="#FFD166" />
+            <TextInput
+              placeholder="Senha"
+              placeholderTextColor="#D1D5DB"
               value={senha}
               onChangeText={setSenha}
-              secureTextEntry={!showPassword}
-              style={styles.inputPassword}
+              secureTextEntry
+              style={styles.input}
             />
-            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-              <MaterialIcons
-                name={showPassword ? 'visibility' : 'visibility-off'}
-                size={24}
-                color="#fff"
-              />
-            </TouchableOpacity>
           </View>
-        </View>
 
-        {/* Botão Entrar */}
-        <Link href="../homescren" asChild>
           <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Entrar</Text>
+            <Text style={styles.buttonText}>Criar Conta</Text>
           </TouchableOpacity>
-        </Link>
 
+          <Link href="/auth/login" asChild>
+            <TouchableOpacity>
+              <Text style={styles.link}>
+                Já tem conta? Entrar
+              </Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
       </KeyboardAvoidingView>
     </LinearGradient>
   );
-};
+}
 
-export default LoginScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  container: { flex: 1 },
+
+  center: {
     flex: 1,
-  },
-  innerContainer: {
-    flex: 1,
-    padding: 24,
     justifyContent: 'center',
-    alignItems: 'center',
+    padding: 24,
   },
+
+  card: {
+    backgroundColor: 'rgba(255,255,255,0.12)',
+    borderRadius: 24,
+    padding: 24,
+  },
+
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontWeight: '800',
     color: '#FFD166',
-    marginBottom: 40,
     textAlign: 'center',
   },
-  inputContainer: {
-    width: '100%',
-    marginBottom: 20,
+
+  subtitle: {
+    fontSize: 14,
+    color: '#E5E7EB',
+    textAlign: 'center',
+    marginBottom: 24,
   },
-  label: {
-    marginBottom: 6,
-    fontSize: 16,
-    color: '#EDEDED',
-    fontWeight: '600',
-  },
-  input: {
-    height: 50,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    color: '#FFF',
-    fontSize: 16,
-  },
-  inputWithIcon: {
+
+  inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 12,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    paddingHorizontal: 16,
-    height: 50,
+    backgroundColor: 'rgba(255,255,255,0.18)',
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    height: 52,
+    marginBottom: 16,
   },
-  inputPassword: {
+
+  input: {
     flex: 1,
+    marginLeft: 10,
     fontSize: 16,
     color: '#FFF',
   },
+
   button: {
-    width: '100%',
     backgroundColor: '#FFD166',
-    paddingVertical: 15,
-    borderRadius: 12,
+    paddingVertical: 14,
+    borderRadius: 14,
     alignItems: 'center',
     marginTop: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
+
   buttonText: {
-    color: '#333',
-    fontWeight: 'bold',
     fontSize: 18,
+    fontWeight: '800',
+    color: '#1F2937',
   },
+
   link: {
-    color: '#EDEDED',
-    marginTop: 20,
     textAlign: 'center',
-    fontSize: 16,
+    marginTop: 18,
+    color: '#E5E7EB',
     fontWeight: '600',
   },
 });

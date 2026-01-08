@@ -99,7 +99,7 @@ export default function HomeScreen() {
       <View style={styles.actions}>
         <TouchableOpacity
           style={[styles.actionBtn, { backgroundColor: theme.card }]}
-          onPress={() => router.push('../gastos')}
+          onPress={() => router.push('/home/mout')}
         >
           <MaterialCommunityIcons
             name="cash-minus"
@@ -113,7 +113,7 @@ export default function HomeScreen() {
 
         <TouchableOpacity
           style={[styles.actionBtn, { backgroundColor: theme.card }]}
-          onPress={() => router.push('../metas')}
+          onPress={() => router.push('/home/meta')}
         >
           <Ionicons
             name="trophy-outline"

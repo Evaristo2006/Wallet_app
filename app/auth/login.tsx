@@ -1,11 +1,10 @@
-import React, { useState } from 'react'; 
+import React, { useState } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  Dimensions,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
@@ -13,10 +12,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'expo-router';
 
-const { width } = Dimensions.get('window');
-
-const LoginScreen = () => {
-  const [name, setName] = useState('');
+export default function LoginFinanceiro() {
+  const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
@@ -27,135 +24,169 @@ const LoginScreen = () => {
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        style={styles.innerContainer}
+        style={styles.center}
       >
-        <Text style={styles.title}>Login</Text>
+        {/* CARD */}
+        <View style={styles.card}>
+          {/* LOGO / TÍTULO */}
+          <View style={styles.header}>
+            <MaterialIcons name="account-balance-wallet" size={42} color="#FFD166" />
+            <Text style={styles.title}>Kwanza+</Text>
+            <Text style={styles.subtitle}>
+              Controle suas finanças com segurança
+            </Text>
+          </View>
 
-        {/* Campo Nome */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Nome de usuário</Text>
-          <TextInput
-            placeholder="Digite seu nome"
-            placeholderTextColor="#EDEDED"
-            value={name}
-            onChangeText={setName}
-            style={styles.input}
-          />
-        </View>
-
-        {/* Campo Senha */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Senha</Text>
-          <View style={styles.inputWithIcon}>
+          {/* EMAIL */}
+          <View style={styles.inputWrapper}>
+            <MaterialIcons name="email" size={22} color="#FFD166" />
             <TextInput
-              placeholder="Digite sua senha"
-              placeholderTextColor="#EDEDED"
+              placeholder="Email"
+              placeholderTextColor="#D1D5DB"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              style={styles.input}
+            />
+          </View>
+
+          {/* SENHA */}
+          <View style={styles.inputWrapper}>
+            <MaterialIcons name="lock" size={22} color="#FFD166" />
+            <TextInput
+              placeholder="Senha"
+              placeholderTextColor="#D1D5DB"
               value={senha}
               onChangeText={setSenha}
               secureTextEntry={!showPassword}
-              style={styles.inputPassword}
+              style={styles.input}
             />
             <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
               <MaterialIcons
                 name={showPassword ? 'visibility' : 'visibility-off'}
-                size={24}
-                color="#fff"
+                size={22}
+                color="#FFD166"
               />
             </TouchableOpacity>
           </View>
+
+          {/* ESQUECEU SENHA */}
+          <TouchableOpacity style={styles.forgot}>
+            <Text style={styles.forgotText}>Esqueceu a senha?</Text>
+          </TouchableOpacity>
+
+          {/* BOTÃO */}
+          <Link href="/home/homescren" asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Entrar</Text>
+            </TouchableOpacity>
+          </Link>
+
+          {/* REGISTRO */}
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>Não tem conta?</Text>
+            <Link href="/auth/registro" asChild>
+              <TouchableOpacity>
+                <Text style={styles.registerText}> Criar agora</Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
         </View>
-
-        {/* Botão Entrar */}
-        <Link href="../home/homescren" asChild>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Entrar</Text>
-          </TouchableOpacity>
-        </Link>
-
-        {/* Link para cadastro */}
-        <Link href="/auth/registro" asChild>
-          <TouchableOpacity>
-            <Text style={styles.link}>Não tem conta? Cadastre-se</Text>
-          </TouchableOpacity>
-        </Link>
       </KeyboardAvoidingView>
     </LinearGradient>
   );
-};
+}
 
-export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  innerContainer: {
+
+  center: {
     flex: 1,
-    padding: 24,
     justifyContent: 'center',
-    alignItems: 'center',
+    padding: 24,
   },
+
+  card: {
+    backgroundColor: 'rgba(255,255,255,0.12)',
+    borderRadius: 24,
+    padding: 28,
+  },
+
+  header: {
+    alignItems: 'center',
+    marginBottom: 32,
+  },
+
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
+    fontSize: 26,
+    fontWeight: '800',
     color: '#FFD166',
-    marginBottom: 40,
+    marginTop: 8,
+  },
+
+  subtitle: {
+    fontSize: 14,
+    color: '#E5E7EB',
+    marginTop: 4,
     textAlign: 'center',
   },
-  inputContainer: {
-    width: '100%',
-    marginBottom: 20,
-  },
-  label: {
-    marginBottom: 6,
-    fontSize: 16,
-    color: '#EDEDED',
-    fontWeight: '600',
-  },
-  input: {
-    height: 50,
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    color: '#FFF',
-    fontSize: 16,
-  },
-  inputWithIcon: {
+
+  inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 12,
-    backgroundColor: 'rgba(255,255,255,0.15)',
-    paddingHorizontal: 16,
-    height: 50,
+    backgroundColor: 'rgba(255,255,255,0.18)',
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    height: 52,
+    marginBottom: 16,
   },
-  inputPassword: {
+
+  input: {
     flex: 1,
+    marginLeft: 10,
     fontSize: 16,
     color: '#FFF',
   },
+
+  forgot: {
+    alignItems: 'flex-end',
+    marginBottom: 20,
+  },
+
+  forgotText: {
+    color: '#E5E7EB',
+    fontSize: 14,
+  },
+
   button: {
-    width: '100%',
     backgroundColor: '#FFD166',
-    paddingVertical: 15,
-    borderRadius: 12,
+    paddingVertical: 14,
+    borderRadius: 14,
     alignItems: 'center',
-    marginTop: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
+
   buttonText: {
-    color: '#333',
-    fontWeight: 'bold',
     fontSize: 18,
+    fontWeight: '800',
+    color: '#1F2937',
   },
-  link: {
-    color: '#EDEDED',
+
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
     marginTop: 20,
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: '600',
+  },
+
+  footerText: {
+    color: '#E5E7EB',
+  },
+
+  registerText: {
+    color: '#FFD166',
+    fontWeight: '700',
   },
 });

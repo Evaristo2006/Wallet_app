@@ -3,7 +3,9 @@ import React, {
   useContext,
   useState,
   ReactNode,
+  useEffect,
 } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 /* ================================
    TIPOS
@@ -58,10 +60,27 @@ const ThemeContext = createContext<ThemeContextType | undefined>(
    PROVIDER
 ================================ */
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState<boolean>(false);
 
-  const toggleTheme = () => {
-    setIsDark(prev => !prev);
+  // 🔹 carregar tema salvo
+  useEffect(() => {
+    const loadTheme = async () => {
+      const savedTheme = await AsyncStorage.getItem('@theme');
+      if (savedTheme === 'dark') {
+        setIsDark(true);
+      }
+    };
+    loadTheme();
+  }, []);
+
+  // 🔹 alternar e salvar
+  const toggleTheme = async () => {
+    const newValue = !isDark;
+    setIsDark(newValue);
+    await AsyncStorage.setItem(
+      '@theme',
+      newValue ? 'dark' : 'light'
+    );
   };
 
   const theme = isDark ? darkTheme : lightTheme;
