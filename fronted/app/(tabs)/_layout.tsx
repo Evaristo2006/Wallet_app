@@ -31,6 +31,19 @@ export default function Layout() {
       }).start();
     }
   };
+
+  const closeMenu = () => {
+    Animated.timing(slideAnim, {
+      toValue: -width * 0.7,
+      duration: 300,
+      useNativeDriver: false,
+    }).start(() => setMenuOpen(false));
+  };
+
+  const navigateTo = (route: string) => {
+    router.push(route as any);
+    closeMenu();
+  };
   // dentro do Layout()
 
 // Função para mapear rota → título
@@ -110,49 +123,76 @@ const getTitle = (path: string) => {
 
         {/* Menu lateral */}
         <Animated.View style={[styles.sideMenu, { left: slideAnim }]}>
-          <Text style={styles.menuTitle}>Menu</Text>
+          <View style={styles.menuHeader}>
+            <Text style={styles.menuTitle}>💰 Kwanza+</Text>
+            <TouchableOpacity onPress={closeMenu}>
+              <Ionicons name="close" size={28} color="#333" />
+            </TouchableOpacity>
+          </View>
 
-          <TouchableOpacity onPress={() => router.push("/homescren")}>
-            <Text
-              style={[styles.menuItem, pathname === "/homescren" && styles.activeMenuItem]}
-            >
-              🏠 Home
+          <View style={styles.menuDivider} />
+
+          <TouchableOpacity 
+            style={[styles.menuItemContainer, pathname === "/home/homescren" && styles.activeMenuItemContainer]}
+            onPress={() => navigateTo("/home/homescren")}
+          >
+            <Ionicons name="home" size={24} color={pathname === "/home/homescren" ? "#3B5BDB" : "#666"} />
+            <Text style={[styles.menuItem, pathname === "/home/homescren" && styles.activeMenuItem]}>
+              Home
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => router.push("/progresso1")}>
-            <Text
-              style={[
-                styles.menuItem,
-                pathname === "/progresso1" && styles.activeMenuItem,
-              ]}
-            >
-              🧭 Criar Campanha
+          <TouchableOpacity 
+            style={[styles.menuItemContainer, pathname === "/home/mout" && styles.activeMenuItemContainer]}
+            onPress={() => navigateTo("/home/mout")}
+          >
+            <Ionicons name="remove-circle-outline" size={24} color={pathname === "/home/mout" ? "#3B5BDB" : "#666"} />
+            <Text style={[styles.menuItem, pathname === "/home/mout" && styles.activeMenuItem]}>
+              Novo Gasto
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => router.push("/profile")}>
-            <Text
-              style={[
-                styles.menuItem,
-                pathname === "/profile" && styles.activeMenuItem,
-              ]}
-            >
-              👤 Perfil
+          <TouchableOpacity 
+            style={[styles.menuItemContainer, pathname === "/home/meta" && styles.activeMenuItemContainer]}
+            onPress={() => navigateTo("/home/meta")}
+          >
+            <Ionicons name="trophy" size={24} color={pathname === "/home/meta" ? "#3B5BDB" : "#666"} />
+            <Text style={[styles.menuItem, pathname === "/home/meta" && styles.activeMenuItem]}>
+              Nova Meta
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => router.push("/login")}>
-            <Text
-              style={[
-                styles.menuItem,
-                pathname === "/login" && styles.activeMenuItem,
-              ]}
-            >
-              🔐 Sair
+          <TouchableOpacity 
+            style={[styles.menuItemContainer, pathname === "/graficos" && styles.activeMenuItemContainer]}
+            onPress={() => navigateTo("/graficos")}
+          >
+            <Ionicons name="bar-chart" size={24} color={pathname === "/graficos" ? "#3B5BDB" : "#666"} />
+            <Text style={[styles.menuItem, pathname === "/graficos" && styles.activeMenuItem]}>
+              Gráficos
             </Text>
           </TouchableOpacity>
-      
+
+          <TouchableOpacity 
+            style={[styles.menuItemContainer, pathname === "/settings" && styles.activeMenuItemContainer]}
+            onPress={() => navigateTo("/settings")}
+          >
+            <Ionicons name="settings" size={24} color={pathname === "/settings" ? "#3B5BDB" : "#666"} />
+            <Text style={[styles.menuItem, pathname === "/settings" && styles.activeMenuItem]}>
+              Configurações
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.menuDivider} />
+
+          <TouchableOpacity 
+            style={styles.menuItemContainer}
+            onPress={() => navigateTo("/auth/login")}
+          >
+            <Ionicons name="log-out" size={24} color="#EF4444" />
+            <Text style={[styles.menuItem, { color: "#EF4444" }]}>
+              Sair
+            </Text>
+          </TouchableOpacity>
         </Animated.View>
       </View>
     </SafeAreaView>
@@ -188,10 +228,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
   },
-  activeMenuItem: {
-    color: "#00AEEF",
-    fontWeight: "bold",
-  },
   headerTitle: { fontSize: rf(18), fontWeight: "bold", marginLeft: 10 },
   screenContainer: {
     flex: 1,
@@ -214,11 +250,46 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     bottom: 0,
-    width: width * 0.7,
-    backgroundColor: "#fff",
-    padding: 20,
+    width: width * 0.65,
+    backgroundColor: "#FFFFFF",
+    padding: 0,
     elevation: 5,
     zIndex: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 2, height: 0 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  menuHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: "#EEE",
+  },
+  menuTitle: { fontSize: rf(20), fontWeight: "bold", color: "#1F2937" },
+  menuDivider: {
+    height: 1,
+    backgroundColor: "#E5E7EB",
+    marginVertical: 12,
+  },
+  menuItemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 0,
+  },
+  activeMenuItemContainer: {
+    backgroundColor: "#F0F4FF",
+    borderLeftWidth: 4,
+    borderLeftColor: "#3B5BDB",
+  },
+  menuItem: { fontSize: rf(16), marginLeft: 16, color: "#666", fontWeight: "500" },
+  activeMenuItem: {
+    color: "#3B5BDB",
+    fontWeight: "700",
   },
   overlay: {
     position: "absolute",
@@ -229,6 +300,4 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.3)",
     zIndex: 10,
   },
-  menuTitle: { fontSize: rf(20), fontWeight: "bold", marginBottom: 20 },
-  menuItem: { fontSize: rf(16), marginVertical: 10 },
 });

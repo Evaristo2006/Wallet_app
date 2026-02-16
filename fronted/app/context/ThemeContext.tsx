@@ -18,6 +18,12 @@ export type Theme = {
   primary: string;
   income: string;
   expense: string;
+  header: string;
+  headerText: string;
+  footer: string;
+  footerText: string;
+  footerActive: string;
+  border: string;
 };
 
 type ThemeContextType = {
@@ -37,6 +43,12 @@ const lightTheme: Theme = {
   primary: '#2563EB',
   income: '#16A34A',
   expense: '#DC2626',
+  header: '#FFFFFF',
+  headerText: '#111827',
+  footer: '#FFFFFF',
+  footerText: '#6B7280',
+  footerActive: '#2563EB',
+  border: '#E5E7EB',
 };
 
 const darkTheme: Theme = {
@@ -47,6 +59,12 @@ const darkTheme: Theme = {
   primary: '#F4C430',
   income: '#2ECC71',
   expense: '#E63946',
+  header: '#1C2541',
+  headerText: '#FFFFFF',
+  footer: '#1C2541',
+  footerText: '#BFC9D9',
+  footerActive: '#F4C430',
+  border: '#374151',
 };
 
 /* ================================
