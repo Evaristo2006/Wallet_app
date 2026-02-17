@@ -1,8 +1,8 @@
 import { rf } from "@/utils/responsive";
 import { Ionicons } from "@expo/vector-icons";
 import { Slot, usePathname, useRouter } from "expo-router";
-import { useState } from "react";
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useRef, useState } from "react";
+import { Animated, Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const { height, width } = Dimensions.get("window");
@@ -11,7 +11,39 @@ export default function Layout() {
   const router = useRouter();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const navigateTo = (route: string) => router.push(route as any);
+
+  // animação do menu lateral
+  const slideAnim = useRef(new Animated.Value(-width * 0.7)).current;
+
+  const toggleMenu = () => {
+    if (menuOpen) {
+      Animated.timing(slideAnim, {
+        toValue: -width * 0.7,
+        duration: 300,
+        useNativeDriver: false,
+      }).start(() => setMenuOpen(false));
+    } else {
+      setMenuOpen(true);
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: false,
+      }).start();
+    }
+  };
+
+  const closeMenu = () => {
+    Animated.timing(slideAnim, {
+      toValue: -width * 0.7,
+      duration: 300,
+      useNativeDriver: false,
+    }).start(() => setMenuOpen(false));
+  };
+
+  const navigateTo = (route: string) => {
+    router.push(route as any);
+    closeMenu();
+  };
   // dentro do Layout()
 
 // Função para mapear rota → título
@@ -41,7 +73,11 @@ const getTitle = (path: string) => {
       <View style={styles.container}>
         {/* Header fixo */}
         <View style={styles.header}>
+          <TouchableOpacity onPress={toggleMenu}>
+            <Ionicons name="menu" size={28} color="#333" />
+          </TouchableOpacity>
           <Text style={styles.headerTitle}>{getTitle(pathname)}</Text>
+
         </View>
 
         {/* Tela atual (ocupa todo o espaço disponível) */}
@@ -76,7 +112,88 @@ const getTitle = (path: string) => {
           </SafeAreaView>
         )}
 
-        {/* overlay and side menu removed - keeping header and bottom nav only */}
+        {/* Overlay para fechar ao clicar fora */}
+        {menuOpen && (
+          <TouchableOpacity
+            style={styles.overlay}
+            activeOpacity={1}
+            onPress={toggleMenu}
+          />
+        )}
+
+        {/* Menu lateral */}
+        <Animated.View style={[styles.sideMenu, { left: slideAnim }]}>
+          <View style={styles.menuHeader}>
+            <Text style={styles.menuTitle}>💰 Kwanza+</Text>
+            <TouchableOpacity onPress={closeMenu}>
+              <Ionicons name="close" size={28} color="#333" />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.menuDivider} />
+
+          <TouchableOpacity 
+            style={[styles.menuItemContainer, pathname === "/home/homescren" && styles.activeMenuItemContainer]}
+            onPress={() => navigateTo("/home/homescren")}
+          >
+            <Ionicons name="home" size={24} color={pathname === "/home/homescren" ? "#3B5BDB" : "#666"} />
+            <Text style={[styles.menuItem, pathname === "/home/homescren" && styles.activeMenuItem]}>
+              Home
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={[styles.menuItemContainer, pathname === "/home/mout" && styles.activeMenuItemContainer]}
+            onPress={() => navigateTo("/home/mout")}
+          >
+            <Ionicons name="remove-circle-outline" size={24} color={pathname === "/home/mout" ? "#3B5BDB" : "#666"} />
+            <Text style={[styles.menuItem, pathname === "/home/mout" && styles.activeMenuItem]}>
+              Novo Gasto
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={[styles.menuItemContainer, pathname === "/home/meta" && styles.activeMenuItemContainer]}
+            onPress={() => navigateTo("/home/meta")}
+          >
+            <Ionicons name="trophy" size={24} color={pathname === "/home/meta" ? "#3B5BDB" : "#666"} />
+            <Text style={[styles.menuItem, pathname === "/home/meta" && styles.activeMenuItem]}>
+              Nova Meta
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={[styles.menuItemContainer, pathname === "/graficos" && styles.activeMenuItemContainer]}
+            onPress={() => navigateTo("/graficos")}
+          >
+            <Ionicons name="bar-chart" size={24} color={pathname === "/graficos" ? "#3B5BDB" : "#666"} />
+            <Text style={[styles.menuItem, pathname === "/graficos" && styles.activeMenuItem]}>
+              Gráficos
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={[styles.menuItemContainer, pathname === "/settings" && styles.activeMenuItemContainer]}
+            onPress={() => navigateTo("/settings")}
+          >
+            <Ionicons name="settings" size={24} color={pathname === "/settings" ? "#3B5BDB" : "#666"} />
+            <Text style={[styles.menuItem, pathname === "/settings" && styles.activeMenuItem]}>
+              Configurações
+            </Text>
+          </TouchableOpacity>
+
+          <View style={styles.menuDivider} />
+
+          <TouchableOpacity 
+            style={styles.menuItemContainer}
+            onPress={() => navigateTo("/auth/login")}
+          >
+            <Ionicons name="log-out" size={24} color="#EF4444" />
+            <Text style={[styles.menuItem, { color: "#EF4444" }]}>
+              Sair
+            </Text>
+          </TouchableOpacity>
+        </Animated.View>
       </View>
     </SafeAreaView>
   );
